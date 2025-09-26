@@ -1,304 +1,187 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal Lógico / Ilógico</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portal Lógico / Ilógico</title>
+<style>
+  /* Reset y estilos generales */
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    font-family: Arial, sans-serif;
+    background:#f5f5f5;
+    color:#222;
+    overflow:hidden;
+  }
+  header, footer {
+    text-align:center;
+    padding:20px;
+    background:#333;
+    color:#fff;
+  }
+  main {
+    padding:50px;
+    text-align:center;
+    min-height:70vh;
+    transition: transform 0.8s ease, opacity 0.8s ease;
+  }
+  button {
+    padding:15px 30px;
+    font-size:18px;
+    cursor:pointer;
+    border:none;
+    border-radius:10px;
+    background:#444;
+    color:white;
+    transition: transform 0.2s;
+  }
+  button:hover { transform: scale(1.05); }
+  .temblar { animation: shake 0.6s; }
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20% { transform: translateX(-10px); }
+    40% { transform: translateX(10px); }
+    60% { transform: translateX(-10px); }
+    80% { transform: translateX(10px); }
+  }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f5f5;
-      color: #222;
-      transition: background 1s ease;
-      overflow: hidden;
-    }
+  /* Mundos */
+  #mundo-logico { display:block; background:#f5f5f5; color:#222; }
+  #mundo-ilogico { display:none; background:radial-gradient(circle, #111, #000); color:#39ff14; position:relative; }
+  #mundo-ilogico button { background:#39ff14; color:black; }
 
-    header, footer {
-      text-align: center;
-      padding: 20px;
-      background: #333;
-      color: #fff;
-    }
+  /* Números flotantes */
+  .numero {
+    position:absolute;
+    font-size:24px;
+    animation: flotar 8s linear infinite;
+    opacity:0.8;
+    font-weight:bold;
+  }
+  @keyframes flotar {
+    from { transform: translateY(100vh) rotate(0deg); }
+    to { transform: translateY(-20vh) rotate(360deg); }
+  }
 
-    main {
-      padding: 50px;
-      text-align: center;
-      min-height: 70vh;
-    }
+  /* Efectos portal */
+  .zoom-out { transform: scale(0) rotate(360deg); opacity:0; }
+  .zoom-in { transform: scale(1); opacity:1; }
 
-    button {
-      padding: 15px 30px;
-      font-size: 18px;
-      cursor: pointer;
-      border: none;
-      border-radius: 10px;
-      background: #444;
-      color: white;
-      transition: transform 0.2s;
-    }
-
-    button:hover {
-      transform: scale(1.05);
-    }
-
-    /* Animación botón */
-    .temblar {
-      animation: shake 0.6s;
-    }
-
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20% { transform: translateX(-10px); }
-      40% { transform: translateX(10px); }
-      60% { transform: translateX(-10px); }
-      80% { transform: translateX(10px); }
-    }
-
-    /* --- Mundos --- */
-    #mundo-logico {
-      display: block;
-      background: #f5f5f5;
-      color: #222;
-    }
-
-    #mundo-ilogico {
-      display: none;
-      background: radial-gradient(circle, #111, #000);
-      color: #39ff14;
-      position: relative;
-    }
-
-    #mundo-ilogico button {
-      background: #39ff14;
-      color: black;
-    }
-
-    /* Números flotantes */
-    .numero {
-      position: absolute;
-      font-size: 24px;
-      animation: flotar 8s linear infinite;
-      opacity: 0.8;
-      font-weight: bold;
-    }
-
-    @keyframes flotar {
-      from { transform: translateY(100vh) rotate(0deg); }
-      to { transform: translateY(-120%) rotate(360deg); }
-    }
-
-    /* Pantalla de carga */
-    .pantalla-carga {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: black;
-      color: lime;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-
-    .pantalla-carga.activa {
-      display: flex;
-      animation: fadeIn 0.5s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-
-    /* Loader circular */
-    .loader {
-      border: 8px solid #333;
-      border-top: 8px solid #39ff14;
-      border-radius: 50%;
-      width: 80px;
-      height: 80px;
-      animation: girar 1s linear infinite;
-      margin-bottom: 20px;
-    }
-
-    @keyframes girar {
-      from { transform: rotate(0deg); }
-      to { transform: rotate(360deg); }
-    }
-
-    /* ✨ Efecto portal */
-    .portal {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: radial-gradient(circle, #39ff14, transparent 70%);
-      transform: translate(-50%, -50%);
-      z-index: 10000;
-      pointer-events: none;
-      opacity: 0.8;
-    }
-
-    .portal.abrir {
-      animation: portalExpand 1.5s forwards;
-    }
-
-    .portal.cerrar {
-      animation: portalCollapse 1.5s forwards;
-    }
-
-    @keyframes portalExpand {
-      from { width: 0; height: 0; opacity: 0.8; }
-      to { width: 3000px; height: 3000px; opacity: 0; }
-    }
-
-    @keyframes portalCollapse {
-      from { width: 3000px; height: 3000px; opacity: 0.8; }
-      to { width: 0; height: 0; opacity: 0; }
-    }
-
-    /* ⚡ Flash */
-    .flash {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: white;
-      opacity: 0;
-      z-index: 10001;
-      pointer-events: none;
-    }
-
-    .flash.activo {
-      animation: flashAnim 0.5s forwards;
-    }
-
-    @keyframes flashAnim {
-      0% { opacity: 0; }
-      20% { opacity: 1; }
-      100% { opacity: 0; }
-    }
-  </style>
+  /* Portal violeta */
+  .portal {
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: radial-gradient(circle, rgba(138,43,226,0.8) 0%, rgba(75,0,130,0.9) 80%);
+    z-index:9999;
+    pointer-events:none;
+    transform: scale(0);
+    border-radius:50%;
+    transition: transform 0.8s ease, opacity 0.8s ease;
+    opacity:0;
+  }
+  .portal.activa {
+    transform: scale(3);
+    opacity:1;
+  }
+</style>
 </head>
 <body>
 
-  <!-- 🌐 Mundo Lógico -->
-  <section id="mundo-logico">
-    <header>
-      <h1>Mundo Lógico</h1>
-    </header>
-    <main>
-      <p>Estás en el mundo lógico.</p>
-      <button id="cambiarMundo" aria-label="Cambiar al mundo ilógico">Cambiar de Mundo</button>
-    </main>
-    <footer>
-      <p>Portal de Mundos</p>
-    </footer>
-  </section>
+<!-- Mundo Lógico -->
+<section id="mundo-logico">
+  <header><h1>Mundo Lógico</h1></header>
+  <main id="logicoMain">
+    <p>Estás en el mundo lógico. Aquí todo sigue reglas claras, coherentes y racionales.</p>
+    <ul>
+      <li>✔ Matemáticas y física</li>
+      <li>✔ Programación y lógica</li>
+      <li>✔ Pensamiento estructurado</li>
+    </ul>
+    <button id="cambiarMundo">Cambiar de Mundo</button>
+  </main>
+  <footer><p>Portal de Mundos © 2025</p></footer>
+</section>
 
-  <!-- 🎭 Mundo Ilógico -->
-  <section id="mundo-ilogico">
-    <header>
-      <h1>Mundo Ilógico</h1>
-    </header>
-    <main>
-      <p>Estás en el mundo ilógico.</p>
-      <button id="volverMundo" aria-label="Volver al mundo lógico">Volver al Mundo Lógico</button>
-    </main>
-    <footer>
-      <p>Portal de Mundos</p>
-    </footer>
-  </section>
+<!-- Mundo Ilógico -->
+<section id="mundo-ilogico">
+  <header><h1>Mundo Ilógico</h1></header>
+  <main id="ilogicoMain">
+    <p>Estás en el mundo ilógico. Aquí todo puede cambiar en cualquier momento.</p>
+    <ul>
+      <li>🎨 Arte abstracto y surrealismo</li>
+      <li>💭 Imaginación sin reglas</li>
+      <li>🌀 Contradicciones y paradojas</li>
+      <li>🌪️ Movimiento constante</li>
+    </ul>
+    <button id="volverMundo">Volver al Mundo Lógico</button>
+  </main>
+  <footer><p>Portal de Mundos © 2025</p></footer>
+</section>
 
-  <!-- ⏳ Pantalla de carga -->
-  <div class="pantalla-carga" id="pantallaCarga">
-    <div class="loader"></div>
-    <p role="status" aria-live="polite">Cargando el otro mundo...</p>
-  </div>
+<!-- Portal violeta -->
+<div id="portal" class="portal"></div>
 
-  <!-- ✨ Efecto portal -->
-  <div class="portal" id="portal"></div>
+<script>
+  const logico = document.getElementById("mundo-logico");
+  const ilogico = document.getElementById("mundo-ilogico");
+  const logicoMain = document.getElementById("logicoMain");
+  const ilogicoMain = document.getElementById("ilogicoMain");
+  const cambiarBtn = document.getElementById("cambiarMundo");
+  const volverBtn = document.getElementById("volverMundo");
+  const portal = document.getElementById("portal");
 
-  <!-- ⚡ Flash -->
-  <div class="flash" id="flash"></div>
+  function colorAleatorio() {
+    const colores = ["#39ff14","#ff00ff","#00ffff","#ff4500","#ffff00","#00ff90"];
+    return colores[Math.floor(Math.random()*colores.length)];
+  }
 
-  <script>
-    const logico = document.getElementById("mundo-logico");
-    const ilogico = document.getElementById("mundo-ilogico");
-    const pantalla = document.getElementById("pantallaCarga");
-    const cambiarBtn = document.getElementById("cambiarMundo");
-    const volverBtn = document.getElementById("volverMundo");
-    const portal = document.getElementById("portal");
-    const flash = document.getElementById("flash");
-
-    // Función para color aleatorio
-    function colorAleatorio() {
-      const colores = ["#39ff14", "#ff00ff", "#00ffff", "#ff4500", "#ffff00", "#00ff90"];
-      return colores[Math.floor(Math.random() * colores.length)];
+  function crearNumeros() {
+    ilogico.querySelectorAll(".numero").forEach(n=>n.remove());
+    for(let i=0;i<25;i++){
+      const num=document.createElement("div");
+      num.classList.add("numero");
+      num.style.left=Math.random()*100+"vw";
+      num.style.animationDuration=(5+Math.random()*10)+"s";
+      num.style.color=colorAleatorio();
+      num.textContent=Math.floor(Math.random()*100);
+      ilogico.appendChild(num);
     }
+  }
 
-    // Crear números flotantes en mundo ilógico
-    function crearNumeros() {
-      ilogico.querySelectorAll(".numero").forEach(n => n.remove());
-      for (let i = 0; i < 25; i++) {
-        const num = document.createElement("div");
-        num.classList.add("numero");
-        num.style.left = Math.random() * 100 + "vw";
-        num.style.animationDuration = (5 + Math.random() * 10) + "s";
-        num.style.color = colorAleatorio();
-        num.textContent = Math.floor(Math.random() * 100);
-        ilogico.appendChild(num);
-      }
-    }
+  function activarPortal(callback) {
+    portal.classList.add("activa");
+    setTimeout(()=>{
+      portal.classList.remove("activa");
+      callback();
+    },800);
+  }
 
-    function activarPortal(tipo) {
-      portal.className = "portal " + tipo;
-      setTimeout(() => {
-        portal.className = "portal"; // reset
-      }, 1500);
-
-      // ⚡ Flash al final del portal
-      setTimeout(() => {
-        flash.classList.add("activo");
-        setTimeout(() => {
-          flash.classList.remove("activo");
-        }, 500);
-      }, 1200);
-    }
-
-    cambiarBtn.addEventListener("click", function() {
-      cambiarBtn.classList.add("temblar");
-      pantalla.classList.add("activa");
-      activarPortal("abrir");
-      setTimeout(() => {
-        logico.style.display = "none";
-        ilogico.style.display = "block";
-        pantalla.classList.remove("activa");
-        crearNumeros();
-      }, 3000);
-    });
-
-    volverBtn.addEventListener("click", function() {
-      pantalla.classList.add("activa");
-      activarPortal("cerrar");
-      setTimeout(() => {
-        ilogico.style.display = "none";
-        logico.style.display = "block";
-        pantalla.classList.remove("activa");
-      }, 3000);
-    });
-
-    cambiarBtn.addEventListener("animationend", () => {
+  // Cambiar al mundo ilógico
+  cambiarBtn.addEventListener("click", function(){
+    logicoMain.classList.add("zoom-out");
+    cambiarBtn.classList.add("temblar");
+    activarPortal(()=>{
+      logico.style.display="none";
+      ilogico.style.display="block";
+      ilogicoMain.classList.add("zoom-in");
+      crearNumeros();
+      logicoMain.classList.remove("zoom-out");
       cambiarBtn.classList.remove("temblar");
     });
-  </script>
+  });
+
+  // Volver al mundo lógico
+  volverBtn.addEventListener("click", function(){
+    ilogicoMain.classList.add("zoom-out");
+    activarPortal(()=>{
+      ilogico.style.display="none";
+      logico.style.display="block";
+      logicoMain.classList.add("zoom-in");
+      ilogico.querySelectorAll(".numero").forEach(n=>n.remove());
+      ilogicoMain.classList.remove("zoom-out");
+    });
+  });
+</script>
 </body>
 </html>
