@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Mundo Lógico vs Ilógico</title>
+  <title>Portal Lógico / Ilógico</title>
 
-  <!-- ✅ ESTILOS CSS -->
   <style>
     * {
       box-sizing: border-box;
@@ -22,23 +21,19 @@
     }
 
     header {
-      background-color: #222;
+      background-color: #111;
       color: white;
-      padding: 1em;
+      padding: 2em;
       text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
     }
 
     h1 {
       margin: 0;
-      transition: all 0.5s;
     }
 
     button {
       margin-top: 1em;
-      padding: 0.5em 1.5em;
+      padding: 0.8em 1.5em;
       font-size: 1em;
       cursor: pointer;
       border: none;
@@ -49,81 +44,47 @@
     }
 
     main {
-      padding: 2em;
       position: relative;
       z-index: 10;
     }
 
-    .section {
-      margin: 2em 0;
-      padding: 1.5em;
-      border-radius: 12px;
-      opacity: 1;
-      transform: translateY(0);
+    .mundo {
+      padding: 3em 2em;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       transition: all 1s ease;
+    }
+
+    .logico {
+      background: linear-gradient(to bottom, #e3f2fd, #ffffff);
+      color: #000;
+    }
+
+    .ilogico {
+      background: radial-gradient(circle at center, #111 0%, #000 100%);
+      color: #39ff14;
       position: relative;
     }
 
-    #logico {
-      background-color: #e3f2fd;
-      border-left: 6px solid #1976d2;
+    .section {
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 12px;
+      padding: 2em;
+      margin: 2em 0;
+      max-width: 800px;
+      width: 100%;
+      align-self: center;
+      transition: all 1s;
     }
 
-    #ilogico {
-      background-color: #fce4ec;
-      border-left: 6px solid #d81b60;
-      font-style: italic;
-    }
-
-    #comparacion {
-      background-color: #f1f8e9;
-      border-left: 6px solid #689f38;
-    }
-
-    footer {
-      text-align: center;
-      padding: 1em;
-      background-color: #ccc;
-    }
-
-    .oculto {
-      opacity: 0;
-      transform: translateY(50px);
-    }
-
-    /* MODO ILÓGICO: Cambios visuales extremos */
-    .ilogico-mode body {
-      background-color: black;
+    .ilogico .section {
+      background-color: rgba(0, 0, 0, 0.4);
+      border: 2px dashed #0f0;
       color: #39ff14;
-    }
-
-    .ilogico-mode header {
-      background: linear-gradient(90deg, purple, red, blue);
-    }
-
-    .ilogico-mode h1 {
-      animation: glitch 1s infinite;
-      text-shadow: 2px 2px red;
-    }
-
-    .ilogico-mode .section {
-      border: 2px dashed #ff00ff;
-      transform: rotate(1deg);
-      background-color: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(3px);
-    }
-
-    .ilogico-mode #ilogico,
-    .ilogico-mode #comparacion {
-      animation: shake 0.3s infinite;
-    }
-
-    @keyframes glitch {
-      0% { text-shadow: 2px 2px red; }
-      25% { text-shadow: -2px -2px blue; }
-      50% { text-shadow: 2px -2px green; }
-      75% { text-shadow: -2px 2px magenta; }
-      100% { text-shadow: none; }
+      font-style: italic;
+      animation: shake 1s infinite;
     }
 
     @keyframes shake {
@@ -134,13 +95,31 @@
       100% { transform: translate(1px, -2px); }
     }
 
-    /* NÚMEROS ILÓGICOS DE FONDO */
+    .separador {
+      background: linear-gradient(to right, #007acc, #000, #ff00ff);
+      color: white;
+      padding: 4em 2em;
+      text-align: center;
+      font-size: 2em;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-shadow: 2px 2px 5px black;
+    }
+
+    footer {
+      background-color: #222;
+      color: white;
+      text-align: center;
+      padding: 1.5em;
+    }
+
+    /* NÚMEROS FLOTANTES */
     #numeros-bg {
-      position: fixed;
+      position: absolute;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
       z-index: 0;
       pointer-events: none;
       overflow: hidden;
@@ -149,7 +128,7 @@
     .numero {
       position: absolute;
       font-size: 20px;
-      color: rgba(0, 255, 0, 0.6);
+      color: rgba(0, 255, 0, 0.4);
       animation: flotar 10s linear infinite;
       font-family: monospace;
     }
@@ -167,87 +146,99 @@
         opacity: 0;
       }
     }
+
   </style>
 </head>
 
 <body>
-  <!-- NÚMEROS ILÓGICOS FLOTANDO -->
-  <div id="numeros-bg"></div>
-
-  <!-- ENCABEZADO -->
   <header>
-    <h1 id="titulo">Mundo Lógico vs Mundo Ilógico</h1>
-    <button id="toggleBtn">Cambiar de Mundo</button>
+    <h1>Mundos Lógico e Ilógico</h1>
+    <button id="toggleBtn">Entrar al Mundo Ilógico</button>
   </header>
 
-  <!-- CONTENIDO -->
   <main>
-    <section id="logico" class="section oculto">
-      <h2>¿Qué es el Mundo Lógico?</h2>
-      <p>Es el mundo que sigue reglas precisas: matemáticas, razonamiento, leyes físicas. Todo puede explicarse, predecirse y entenderse de manera racional.</p>
-      <p>Ejemplos: computadoras, algoritmos, lógica matemática, programación, física.</p>
+    <!-- 🌍 MUNDO LÓGICO -->
+    <section class="mundo logico" id="mundo-logico">
+      <div class="section">
+        <h2>🌐 Mundo Lógico</h2>
+        <p>Un mundo donde todo sigue reglas claras, coherentes y racionales. Aquí mandan las matemáticas, la lógica, la ciencia y el pensamiento estructurado.</p>
+        <ul>
+          <li>✔ Razonamiento Deductivo</li>
+          <li>✔ Programación y algoritmos</li>
+          <li>✔ Física y Matemáticas</li>
+          <li>✔ Estructura y precisión</li>
+        </ul>
+      </div>
     </section>
 
-    <section id="ilogico" class="section oculto">
-      <h2>¿Qué es el Mundo Ilógico?</h2>
-      <p>Un mundo sin reglas definidas, donde los pensamientos son abstractos, caóticos o incluso contradictorios. Ideal para soñar, imaginar y crear sin límites.</p>
-      <p>Ejemplos: arte surrealista, sueños, paradojas, creatividad libre.</p>
-    </section>
+    <!-- 🌀 PORTAL -->
+    <div class="separador">
+      ⚡ TRANSICIÓN ENTRE MUNDOS ⚡
+    </div>
 
-    <section id="comparacion" class="section oculto">
-      <h2>Comparación entre Lógico e Ilógico</h2>
-      <ul>
-        <li><b>Lógico:</b> Objetivo – <b>Ilógico:</b> Subjetivo</li>
-        <li><b>Lógico:</b> Estructurado – <b>Ilógico:</b> Caótico</li>
-        <li><b>Lógico:</b> Real – <b>Ilógico:</b> Imaginario</li>
-        <li><b>Lógico:</b> Predecible – <b>Ilógico:</b> Sorprendente</li>
-      </ul>
+    <!-- 🌈 MUNDO ILÓGICO -->
+    <section class="mundo ilogico" id="mundo-ilogico">
+      <div id="numeros-bg"></div>
+
+      <div class="section">
+        <h2>🎭 Mundo Ilógico</h2>
+        <p>Aquí no hay límites. El caos, la creatividad y lo imposible conviven. Nada es lo que parece, y todo puede cambiar en cualquier momento.</p>
+        <ul>
+          <li>🎨 Arte abstracto y surrealismo</li>
+          <li>💭 Imaginación sin reglas</li>
+          <li>🌀 Contradicciones y paradojas</li>
+          <li>🌪️ Movimiento y transformación constante</li>
+        </ul>
+      </div>
     </section>
   </main>
 
-  <!-- PIE DE PÁGINA -->
   <footer>
     <p>Proyecto de Informática © 2025</p>
   </footer>
 
   <!-- ✅ JAVASCRIPT -->
   <script>
-    // Mostrar secciones al hacer scroll
-    const secciones = document.querySelectorAll('.section');
-
-    function mostrarSecciones() {
-      secciones.forEach(sec => {
-        const top = sec.getBoundingClientRect().top;
-        const alturaPantalla = window.innerHeight;
-
-        if (top < alturaPantalla - 100) {
-          sec.classList.remove('oculto');
-        }
-      });
-    }
-
-    window.addEventListener('scroll', mostrarSecciones);
-    window.addEventListener('load', mostrarSecciones);
-
-    // MODO ILÓGICO
     const toggleBtn = document.getElementById('toggleBtn');
-    const root = document.documentElement;
-    let numerosActivos = false;
+    const numerosBg = document.getElementById('numeros-bg');
+    let generando = false;
+    let intervaloNumeros;
 
     toggleBtn.addEventListener('click', () => {
-      root.classList.toggle('ilogico-mode');
-      if (root.classList.contains('ilogico-mode')) {
+      document.body.classList.toggle('ilogico-activado');
+
+      if (!generando) {
         iniciarNumeros();
+        toggleBtn.textContent = 'Volver al Mundo Lógico';
+        generando = true;
       } else {
         detenerNumeros();
+        toggleBtn.textContent = 'Entrar al Mundo Ilógico';
+        generando = false;
       }
     });
 
-    // NÚMEROS ALEATORIOS DE FONDO
-    const contenedorNumeros = document.getElementById('numeros-bg');
-    let intervaloNumeros;
+    function iniciarNumeros() {
+      intervaloNumeros = setInterval(() => {
+        const numero = document.createElement('div');
+        numero.classList.add('numero');
+        numero.textContent = Math.floor(Math.random() * 10);
+        numero.style.left = Math.random() * 100 + 'vw';
+        numero.style.top = Math.random() * 100 + 'vh';
+        numero.style.fontSize = Math.random() * 24 + 12 + 'px';
+        numerosBg.appendChild(numero);
 
-    function crearNumero() {
-      const numero = document.createElement('div');
-      numero.classList.add('numero');
-      numero.textContent =
+        // Eliminar después de 10 segundos
+        setTimeout(() => {
+          numero.remove();
+        }, 10000);
+      }, 100);
+    }
+
+    function detenerNumeros() {
+      clearInterval(intervaloNumeros);
+      numerosBg.innerHTML = '';
+    }
+  </script>
+</body>
+</html>
