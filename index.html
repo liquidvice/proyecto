@@ -1,221 +1,215 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Portal Lógico / Ilógico</title>
-
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
+    * {
       margin: 0;
       padding: 0;
-      transition: all 1s ease;
-      overflow-x: hidden;
+      box-sizing: border-box;
     }
 
-    header {
-      padding: 2em;
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      color: #222;
+      transition: background 1s ease;
+      overflow: hidden;
+    }
+
+    header, footer {
       text-align: center;
-      transition: all 1s ease;
-      position: relative;
-      z-index: 10;
+      padding: 20px;
+      background: #333;
+      color: #fff;
     }
 
-    h1 {
-      margin: 0;
+    main {
+      padding: 50px;
+      text-align: center;
+      min-height: 70vh;
     }
 
     button {
-      margin-top: 1em;
-      padding: 0.8em 1.5em;
-      font-size: 1em;
+      padding: 15px 30px;
+      font-size: 18px;
       cursor: pointer;
       border: none;
-      border-radius: 8px;
-      transition: all 0.4s ease;
-      position: relative;
-      z-index: 10;
-    }
-
-    .mundo {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 2em;
-      text-align: center;
-      position: relative;
-      z-index: 5;
-    }
-
-    /* 🌐 Mundo lógico */
-    .logico {
-      background: linear-gradient(to bottom, #e3f2fd, #ffffff);
-      color: #000;
-    }
-
-    .logico header {
-      background-color: #111;
+      border-radius: 10px;
+      background: #444;
       color: white;
+      transition: transform 0.2s;
     }
 
-    .logico button {
-      background-color: #007acc;
-      color: white;
+    button:hover {
+      transform: scale(1.05);
     }
 
-    /* 🎭 Mundo ilógico */
-    .ilogico {
-      background: radial-gradient(circle at center, #111 0%, #000 100%);
-      color: #39ff14;
-      overflow: hidden;
-    }
-
-    .ilogico header {
-      background-color: #222;
-      color: #39ff14;
-      text-shadow: 0 0 10px #0f0;
-    }
-
-    .ilogico button {
-      background-color: #ff00ff;
-      color: black;
-    }
-
-    .ilogico .section {
-      background-color: rgba(0, 0, 0, 0.4);
-      border: 2px dashed #0f0;
-      padding: 2em;
-      max-width: 600px;
-      margin: 2em auto;
-      animation: shake 1s infinite;
+    /* Animación botón */
+    .temblar {
+      animation: shake 0.6s;
     }
 
     @keyframes shake {
-      0% { transform: translate(0, 0); }
-      25% { transform: translate(-2px, 1px); }
-      50% { transform: translate(2px, -1px); }
-      75% { transform: translate(-1px, 2px); }
-      100% { transform: translate(1px, -2px); }
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-10px); }
+      40% { transform: translateX(10px); }
+      60% { transform: translateX(-10px); }
+      80% { transform: translateX(10px); }
     }
 
-    footer {
-      padding: 1.5em;
-      text-align: center;
+    /* --- Mundos --- */
+    #mundo-logico {
+      display: block;
+      background: #f5f5f5;
+      color: #222;
+    }
+
+    #mundo-ilogico {
+      display: none;
+      background: radial-gradient(circle, #111, #000);
+      color: #39ff14;
       position: relative;
-      z-index: 10;
     }
 
-    /* 🔢 Números flotantes */
-    #numeros-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
+    #mundo-ilogico button {
+      background: #39ff14;
+      color: black;
     }
 
+    /* Números flotantes */
     .numero {
       position: absolute;
-      font-size: 20px;
-      color: rgba(0, 255, 0, 0.4);
-      animation: flotar 10s linear infinite;
-      font-family: monospace;
+      font-size: 24px;
+      color: #39ff14;
+      animation: flotar 8s linear infinite;
+      opacity: 0.7;
     }
 
     @keyframes flotar {
-      0% {
-        transform: translateY(100vh) rotate(0deg);
-        opacity: 0;
-      }
-      30% {
-        opacity: 1;
-      }
-      100% {
-        transform: translateY(-100vh) rotate(360deg);
-        opacity: 0;
-      }
+      from { transform: translateY(100vh) rotate(0deg); }
+      to { transform: translateY(-20vh) rotate(360deg); }
+    }
+
+    /* Pantalla de carga */
+    .pantalla-carga {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: black;
+      color: lime;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .pantalla-carga.activa {
+      display: flex;
+      animation: fadeIn 0.5s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Loader circular */
+    .loader {
+      border: 8px solid #333;
+      border-top: 8px solid #39ff14;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      animation: girar 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes girar {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <h1 id="titulo"></h1>
-    <button id="toggleBtn"></button>
-  </header>
 
-  <main>
-    <!-- Números flotantes solo para el mundo ilógico -->
-    <div id="numeros-bg"></div>
-    <section class="mundo" id="contenido"></section>
-  </main>
+  <!-- 🌐 Mundo Lógico -->
+  <section id="mundo-logico">
+    <header>
+      <h1>Mundo Lógico</h1>
+    </header>
+    <main>
+      <p>Estás en el mundo lógico.</p>
+      <button id="cambiarMundo">Cambiar de Mundo</button>
+    </main>
+    <footer>
+      <p>Portal de Mundos</p>
+    </footer>
+  </section>
 
-  <footer>
-    <p>Proyecto de Informática © 2025</p>
-  </footer>
+  <!-- 🎭 Mundo Ilógico -->
+  <section id="mundo-ilogico">
+    <header>
+      <h1>Mundo Ilógico</h1>
+    </header>
+    <main>
+      <p>Estás en el mundo ilógico.</p>
+      <button id="volverMundo">Volver al Mundo Lógico</button>
+    </main>
+    <footer>
+      <p>Portal de Mundos</p>
+    </footer>
+  </section>
+
+  <!-- ⏳ Pantalla de carga -->
+  <div class="pantalla-carga" id="pantallaCarga">
+    <div class="loader"></div>
+    <p>Cargando el otro mundo...</p>
+  </div>
 
   <script>
-    // Detectar en qué mundo estamos (?mundo=...)
-    const params = new URLSearchParams(window.location.search);
-    const mundo = params.get("mundo") || "logico";
+    const logico = document.getElementById("mundo-logico");
+    const ilogico = document.getElementById("mundo-ilogico");
+    const pantalla = document.getElementById("pantallaCarga");
+    const cambiarBtn = document.getElementById("cambiarMundo");
+    const volverBtn = document.getElementById("volverMundo");
 
-    const titulo = document.getElementById("titulo");
-    const contenido = document.getElementById("contenido");
-    const toggleBtn = document.getElementById("toggleBtn");
-    const numerosBg = document.getElementById("numeros-bg");
-
-    if (mundo === "ilogico") {
-      document.body.classList.add("ilogico");
-      titulo.textContent = "🎭 Mundo Ilógico";
-      contenido.innerHTML = `
-        <div class="section">
-          <p>Aquí no hay límites. El caos, la creatividad y lo imposible conviven.</p>
-          <ul>
-            <li>🎨 Arte abstracto</li>
-            <li>💭 Imaginación sin reglas</li>
-            <li>🌀 Contradicciones</li>
-            <li>🌪️ Transformación constante</li>
-          </ul>
-        </div>
-      `;
-      toggleBtn.textContent = "Volver al Mundo Lógico";
-      toggleBtn.onclick = () => window.location.href = "?mundo=logico";
-
-      // Generar números flotantes
-      setInterval(() => {
-        const numero = document.createElement("div");
-        numero.classList.add("numero");
-        numero.textContent = Math.floor(Math.random() * 10);
-        numero.style.left = Math.random() * 100 + "vw";
-        numero.style.fontSize = Math.random() * 24 + 12 + "px";
-        numerosBg.appendChild(numero);
-
-        setTimeout(() => numero.remove(), 10000);
-      }, 100);
-
-    } else {
-      document.body.classList.add("logico");
-      titulo.textContent = "🌐 Mundo Lógico";
-      contenido.innerHTML = `
-        <div class="section">
-          <p>Un mundo donde todo sigue reglas claras y racionales.</p>
-          <ul>
-            <li>✔ Razonamiento Deductivo</li>
-            <li>✔ Programación y algoritmos</li>
-            <li>✔ Física y Matemáticas</li>
-            <li>✔ Estructura y precisión</li>
-          </ul>
-        </div>
-      `;
-      toggleBtn.textContent = "Entrar al Mundo Ilógico";
-      toggleBtn.onclick = () => window.location.href = "?mundo=ilogico";
+    // Crear números flotantes en mundo ilógico
+    function crearNumeros() {
+      for (let i = 0; i < 25; i++) {
+        const num = document.createElement("div");
+        num.classList.add("numero");
+        num.style.left = Math.random() * 100 + "vw";
+        num.style.animationDuration = (5 + Math.random() * 10) + "s";
+        num.textContent = Math.floor(Math.random() * 100);
+        ilogico.appendChild(num);
+      }
     }
+
+    cambiarBtn.addEventListener("click", function() {
+      cambiarBtn.classList.add("temblar");
+      pantalla.classList.add("activa");
+      setTimeout(() => {
+        logico.style.display = "none";
+        ilogico.style.display = "block";
+        pantalla.classList.remove("activa");
+        cambiarBtn.classList.remove("temblar");
+        crearNumeros();
+      }, 2500);
+    });
+
+    volverBtn.addEventListener("click", function() {
+      pantalla.classList.add("activa");
+      setTimeout(() => {
+        ilogico.style.display = "none";
+        logico.style.display = "block";
+        pantalla.classList.remove("activa");
+      }, 2500);
+    });
   </script>
 </body>
 </html>
