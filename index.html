@@ -25,6 +25,7 @@
       color: white;
       padding: 2em;
       text-align: center;
+      transition: all 1s ease;
     }
 
     h1 {
@@ -111,6 +112,31 @@
       color: white;
       text-align: center;
       padding: 1.5em;
+      transition: all 1s ease;
+    }
+
+    /* 🎭 CAMBIO GLOBAL CUANDO SE ACTIVA EL MUNDO ILÓGICO */
+    body.ilogico-activado {
+      background: radial-gradient(circle at center, #111 0%, #000 100%);
+      color: #39ff14;
+    }
+
+    body.ilogico-activado header {
+      background-color: #222;
+      color: #39ff14;
+      text-shadow: 0 0 10px #0f0;
+    }
+
+    body.ilogico-activado button {
+      background-color: #ff00ff;
+      color: black;
+      transform: rotate(-2deg);
+    }
+
+    body.ilogico-activado footer {
+      background-color: #000;
+      color: #0f0;
+      text-shadow: 0 0 8px #39ff14;
     }
 
     /* NÚMEROS FLOTANTES */
@@ -146,7 +172,6 @@
         opacity: 0;
       }
     }
-
   </style>
 </head>
 
