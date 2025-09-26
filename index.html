@@ -90,12 +90,12 @@
 
     @keyframes flotar {
       from { transform: translateY(100vh) rotate(0deg); }
-      to { transform: translateY(-20vh) rotate(360deg); }
+      to { transform: translateY(-120%) rotate(360deg); }
     }
 
     /* Pantalla de carga */
     .pantalla-carga {
-      display: none; /* 👈 ahora empieza oculta */
+      display: none;
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
@@ -132,6 +132,60 @@
       from { transform: rotate(0deg); }
       to { transform: rotate(360deg); }
     }
+
+    /* ✨ Efecto portal */
+    .portal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: radial-gradient(circle, #39ff14, transparent 70%);
+      transform: translate(-50%, -50%);
+      z-index: 10000;
+      pointer-events: none;
+      opacity: 0.8;
+    }
+
+    .portal.abrir {
+      animation: portalExpand 1.5s forwards;
+    }
+
+    .portal.cerrar {
+      animation: portalCollapse 1.5s forwards;
+    }
+
+    @keyframes portalExpand {
+      from { width: 0; height: 0; opacity: 0.8; }
+      to { width: 3000px; height: 3000px; opacity: 0; }
+    }
+
+    @keyframes portalCollapse {
+      from { width: 3000px; height: 3000px; opacity: 0.8; }
+      to { width: 0; height: 0; opacity: 0; }
+    }
+
+    /* ⚡ Flash */
+    .flash {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: white;
+      opacity: 0;
+      z-index: 10001;
+      pointer-events: none;
+    }
+
+    .flash.activo {
+      animation: flashAnim 0.5s forwards;
+    }
+
+    @keyframes flashAnim {
+      0% { opacity: 0; }
+      20% { opacity: 1; }
+      100% { opacity: 0; }
+    }
   </style>
 </head>
 <body>
@@ -143,7 +197,7 @@
     </header>
     <main>
       <p>Estás en el mundo lógico.</p>
-      <button id="cambiarMundo">Cambiar de Mundo</button>
+      <button id="cambiarMundo" aria-label="Cambiar al mundo ilógico">Cambiar de Mundo</button>
     </main>
     <footer>
       <p>Portal de Mundos</p>
@@ -157,7 +211,7 @@
     </header>
     <main>
       <p>Estás en el mundo ilógico.</p>
-      <button id="volverMundo">Volver al Mundo Lógico</button>
+      <button id="volverMundo" aria-label="Volver al mundo lógico">Volver al Mundo Lógico</button>
     </main>
     <footer>
       <p>Portal de Mundos</p>
@@ -167,8 +221,14 @@
   <!-- ⏳ Pantalla de carga -->
   <div class="pantalla-carga" id="pantallaCarga">
     <div class="loader"></div>
-    <p>Cargando el otro mundo...</p>
+    <p role="status" aria-live="polite">Cargando el otro mundo...</p>
   </div>
+
+  <!-- ✨ Efecto portal -->
+  <div class="portal" id="portal"></div>
+
+  <!-- ⚡ Flash -->
+  <div class="flash" id="flash"></div>
 
   <script>
     const logico = document.getElementById("mundo-logico");
@@ -176,6 +236,8 @@
     const pantalla = document.getElementById("pantallaCarga");
     const cambiarBtn = document.getElementById("cambiarMundo");
     const volverBtn = document.getElementById("volverMundo");
+    const portal = document.getElementById("portal");
+    const flash = document.getElementById("flash");
 
     // Función para color aleatorio
     function colorAleatorio() {
@@ -185,6 +247,7 @@
 
     // Crear números flotantes en mundo ilógico
     function crearNumeros() {
+      ilogico.querySelectorAll(".numero").forEach(n => n.remove());
       for (let i = 0; i < 25; i++) {
         const num = document.createElement("div");
         num.classList.add("numero");
@@ -196,25 +259,45 @@
       }
     }
 
+    function activarPortal(tipo) {
+      portal.className = "portal " + tipo;
+      setTimeout(() => {
+        portal.className = "portal"; // reset
+      }, 1500);
+
+      // ⚡ Flash al final del portal
+      setTimeout(() => {
+        flash.classList.add("activo");
+        setTimeout(() => {
+          flash.classList.remove("activo");
+        }, 500);
+      }, 1200);
+    }
+
     cambiarBtn.addEventListener("click", function() {
       cambiarBtn.classList.add("temblar");
       pantalla.classList.add("activa");
+      activarPortal("abrir");
       setTimeout(() => {
         logico.style.display = "none";
         ilogico.style.display = "block";
         pantalla.classList.remove("activa");
-        cambiarBtn.classList.remove("temblar");
         crearNumeros();
-      }, 3000); // ⏳ 3 segundos
+      }, 3000);
     });
 
     volverBtn.addEventListener("click", function() {
       pantalla.classList.add("activa");
+      activarPortal("cerrar");
       setTimeout(() => {
         ilogico.style.display = "none";
         logico.style.display = "block";
         pantalla.classList.remove("activa");
-      }, 3000); // ⏳ 3 segundos
+      }, 3000);
+    });
+
+    cambiarBtn.addEventListener("animationend", () => {
+      cambiarBtn.classList.remove("temblar");
     });
   </script>
 </body>
