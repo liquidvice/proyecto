@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Portal Lógico / Ilógico</title>
+  <title>Portal Mágico entre Mundos</title>
 
   <style>
     * {
@@ -113,7 +113,40 @@
       padding: 1.5em;
     }
 
-    /* NÚMEROS FLOTANTES */
+    /* ✨ PORTAL MÁGICO ANIMACIÓN */
+    #portal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.9) 100%);
+      backdrop-filter: blur(10px);
+      display: none;
+      z-index: 9999;
+      animation: portalAnim 2s forwards;
+    }
+
+    .activo {
+      display: block;
+    }
+
+    @keyframes portalAnim {
+      0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(0deg);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(180deg);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(2) rotate(360deg);
+      }
+    }
+
+    /* NÚMEROS ILÓGICOS FLOTANTES */
     #numeros-bg {
       position: absolute;
       top: 0;
@@ -146,48 +179,49 @@
         opacity: 0;
       }
     }
-
   </style>
 </head>
 
 <body>
+  <!-- Portal mágico visual -->
+  <div id="portal"></div>
+
+  <!-- Números flotando (solo en mundo ilógico) -->
+  <div id="numeros-bg"></div>
+
+  <!-- Encabezado -->
   <header>
     <h1>Mundos Lógico e Ilógico</h1>
     <button id="toggleBtn">Entrar al Mundo Ilógico</button>
   </header>
 
+  <!-- Contenido principal -->
   <main>
-    <!-- 🌍 MUNDO LÓGICO -->
+    <!-- Mundo Lógico -->
     <section class="mundo logico" id="mundo-logico">
       <div class="section">
         <h2>🌐 Mundo Lógico</h2>
-        <p>Un mundo donde todo sigue reglas claras, coherentes y racionales. Aquí mandan las matemáticas, la lógica, la ciencia y el pensamiento estructurado.</p>
+        <p>Regido por la razón, el orden y la estructura. Se basa en reglas claras, matemáticas y pensamiento racional.</p>
         <ul>
-          <li>✔ Razonamiento Deductivo</li>
-          <li>✔ Programación y algoritmos</li>
-          <li>✔ Física y Matemáticas</li>
-          <li>✔ Estructura y precisión</li>
+          <li>✔ Lógica matemática</li>
+          <li>✔ Tecnología y ciencia</li>
+          <li>✔ Sistemas organizados</li>
         </ul>
       </div>
     </section>
 
-    <!-- 🌀 PORTAL -->
-    <div class="separador">
-      ⚡ TRANSICIÓN ENTRE MUNDOS ⚡
-    </div>
+    <!-- Separador visual -->
+    <div class="separador">⚡ PORTAL ENTRE MUNDOS ⚡</div>
 
-    <!-- 🌈 MUNDO ILÓGICO -->
+    <!-- Mundo Ilógico -->
     <section class="mundo ilogico" id="mundo-ilogico">
-      <div id="numeros-bg"></div>
-
       <div class="section">
         <h2>🎭 Mundo Ilógico</h2>
-        <p>Aquí no hay límites. El caos, la creatividad y lo imposible conviven. Nada es lo que parece, y todo puede cambiar en cualquier momento.</p>
+        <p>Donde todo puede pasar. Sin límites ni estructuras, solo caos creativo, ideas extrañas y lógica retorcida.</p>
         <ul>
-          <li>🎨 Arte abstracto y surrealismo</li>
-          <li>💭 Imaginación sin reglas</li>
-          <li>🌀 Contradicciones y paradojas</li>
-          <li>🌪️ Movimiento y transformación constante</li>
+          <li>🎨 Arte surrealista</li>
+          <li>💭 Sueños y alucinaciones</li>
+          <li>🔁 Paradojas y contradicciones</li>
         </ul>
       </div>
     </section>
@@ -197,48 +231,36 @@
     <p>Proyecto de Informática © 2025</p>
   </footer>
 
-  <!-- ✅ JAVASCRIPT -->
+  <!-- JavaScript -->
   <script>
     const toggleBtn = document.getElementById('toggleBtn');
+    const portal = document.getElementById('portal');
     const numerosBg = document.getElementById('numeros-bg');
-    let generando = false;
+    let ilogicoActivo = false;
     let intervaloNumeros;
 
     toggleBtn.addEventListener('click', () => {
-      document.body.classList.toggle('ilogico-activado');
+      // Mostrar animación del portal
+      portal.classList.add('activo');
 
-      if (!generando) {
-        iniciarNumeros();
-        toggleBtn.textContent = 'Volver al Mundo Lógico';
-        generando = true;
-      } else {
-        detenerNumeros();
-        toggleBtn.textContent = 'Entrar al Mundo Ilógico';
-        generando = false;
-      }
+      // Esperar a que termine (2s), luego cambiar modo
+      setTimeout(() => {
+        ilogicoActivo = !ilogicoActivo;
+
+        if (ilogicoActivo) {
+          toggleBtn.textContent = "Volver al Mundo Lógico";
+          iniciarNumeros();
+        } else {
+          toggleBtn.textContent = "Entrar al Mundo Ilógico";
+          detenerNumeros();
+        }
+
+        portal.classList.remove('activo');
+      }, 2000);
     });
 
     function iniciarNumeros() {
       intervaloNumeros = setInterval(() => {
         const numero = document.createElement('div');
         numero.classList.add('numero');
-        numero.textContent = Math.floor(Math.random() * 10);
-        numero.style.left = Math.random() * 100 + 'vw';
-        numero.style.top = Math.random() * 100 + 'vh';
-        numero.style.fontSize = Math.random() * 24 + 12 + 'px';
-        numerosBg.appendChild(numero);
-
-        // Eliminar después de 10 segundos
-        setTimeout(() => {
-          numero.remove();
-        }, 10000);
-      }, 100);
-    }
-
-    function detenerNumeros() {
-      clearInterval(intervaloNumeros);
-      numerosBg.innerHTML = '';
-    }
-  </script>
-</body>
-</html>
+        numero.textContent
