@@ -83,9 +83,9 @@
     .numero {
       position: absolute;
       font-size: 24px;
-      color: #39ff14;
       animation: flotar 8s linear infinite;
-      opacity: 0.7;
+      opacity: 0.8;
+      font-weight: bold;
     }
 
     @keyframes flotar {
@@ -178,6 +178,12 @@
     const cambiarBtn = document.getElementById("cambiarMundo");
     const volverBtn = document.getElementById("volverMundo");
 
+    // Función para color aleatorio
+    function colorAleatorio() {
+      const colores = ["#39ff14", "#ff00ff", "#00ffff", "#ff4500", "#ffff00", "#00ff90"];
+      return colores[Math.floor(Math.random() * colores.length)];
+    }
+
     // Crear números flotantes en mundo ilógico
     function crearNumeros() {
       for (let i = 0; i < 25; i++) {
@@ -185,6 +191,7 @@
         num.classList.add("numero");
         num.style.left = Math.random() * 100 + "vw";
         num.style.animationDuration = (5 + Math.random() * 10) + "s";
+        num.style.color = colorAleatorio();
         num.textContent = Math.floor(Math.random() * 100);
         ilogico.appendChild(num);
       }
@@ -199,7 +206,7 @@
         pantalla.classList.remove("activa");
         cambiarBtn.classList.remove("temblar");
         crearNumeros();
-      }, 2500);
+      }, 3000); // ⏳ ahora dura 3 segundos
     });
 
     volverBtn.addEventListener("click", function() {
@@ -208,7 +215,7 @@
         ilogico.style.display = "none";
         logico.style.display = "block";
         pantalla.classList.remove("activa");
-      }, 2500);
+      }, 3000); // ⏳ ahora dura 3 segundos
     });
   </script>
 </body>
