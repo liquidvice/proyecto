@@ -95,13 +95,12 @@
 
     /* Pantalla de carga */
     .pantalla-carga {
-      display: none;
+      display: none; /* 👈 ahora empieza oculta */
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: black;
       color: lime;
-      display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
@@ -206,7 +205,7 @@
         pantalla.classList.remove("activa");
         cambiarBtn.classList.remove("temblar");
         crearNumeros();
-      }, 3000); // ⏳ ahora dura 3 segundos
+      }, 3000); // ⏳ 3 segundos
     });
 
     volverBtn.addEventListener("click", function() {
@@ -215,7 +214,7 @@
         ilogico.style.display = "none";
         logico.style.display = "block";
         pantalla.classList.remove("activa");
-      }, 3000); // ⏳ ahora dura 3 segundos
+      }, 3000); // ⏳ 3 segundos
     });
   </script>
 </body>
