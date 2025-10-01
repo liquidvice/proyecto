@@ -46,7 +46,7 @@
 
   /* Mundos */
   #mundo-logico { display:block; background:#f5f5f5; color:#222; }
-  #mundo-ilogico { display:none; background:radial-gradient(circle, #111, #000); color:#ffccff; position:relative; }
+  #mundo-ilogico { display:none; background:radial-gradient(circle, #111, #000); color:#ffccff; position:relative; overflow:hidden; }
   #mundo-ilogico button { background:#ffccff; color:black; }
 
   /* Objetos flotantes */
@@ -83,6 +83,32 @@
     transform: scale(3);
     opacity:1;
   }
+
+  /* Frases mágicas */
+  #frase {
+    margin-top:30px;
+    font-style:italic;
+    font-size:20px;
+    animation: parpadear 2s infinite;
+  }
+  @keyframes parpadear {
+    0%,100% { opacity:1; }
+    50% { opacity:0.4; }
+  }
+
+  /* Cursor mágico */
+  .destello {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background: radial-gradient(circle, #ff00ff, transparent);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: desvanecer 1s forwards;
+  }
+  @keyframes desvanecer {
+    to { transform: scale(2); opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -115,6 +141,7 @@
       <li>⏰ Relojes que laten sin tiempo</li>
       <li>🍄 Mensajes como “¡Cómeme!” y “¡Bébeme!”</li>
     </ul>
+    <p id="frase"></p>
     <button id="volverMundo">Despertar del Sueño 🌙</button>
   </main>
   <footer><p>Alicia y los Mundos © 2025</p></footer>
@@ -122,6 +149,14 @@
 
 <!-- Portal violeta -->
 <div id="portal" class="portal"></div>
+
+<!-- Música y sonidos -->
+<audio id="musica" loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+<audio id="whoosh">
+  <source src="https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg" type="audio/ogg">
+</audio>
 
 <script>
   const logico = document.getElementById("mundo-logico");
@@ -131,6 +166,16 @@
   const cambiarBtn = document.getElementById("cambiarMundo");
   const volverBtn = document.getElementById("volverMundo");
   const portal = document.getElementById("portal");
+  const musica = document.getElementById("musica");
+  const whoosh = document.getElementById("whoosh");
+  const frase = document.getElementById("frase");
+
+  const frasesLocas = [
+    "“¿Has perdido la cabeza? ¡Yo estoy loco, tú estás loca, todos lo estamos!” – Sombrerero Loco",
+    "“Si no sabes adónde vas, cualquier camino te llevará allí.” – Gato de Cheshire",
+    "“A veces pienso en seis cosas imposibles antes del desayuno.” – Alicia",
+    "“El tiempo es un niño que juega como un niño.” – Sombrerero Loco"
+  ];
 
   function colorAleatorio() {
     const colores = ["#ffccff","#39ff14","#ff00ff","#00ffff","#ff4500","#ffff00"];
@@ -152,6 +197,7 @@
   }
 
   function activarPortal(callback) {
+    whoosh.play();
     portal.classList.add("activa");
     setTimeout(()=>{
       portal.classList.remove("activa");
@@ -168,6 +214,8 @@
       ilogico.style.display="block";
       ilogicoMain.classList.add("zoom-in");
       crearObjetos();
+      frase.textContent = frasesLocas[Math.floor(Math.random()*frasesLocas.length)];
+      musica.play();
       logicoMain.classList.remove("zoom-out");
       cambiarBtn.classList.remove("temblar");
     });
@@ -182,9 +230,22 @@
       logicoMain.classList.add("zoom-in");
       ilogico.querySelectorAll(".flotante").forEach(n=>n.remove());
       ilogicoMain.classList.remove("zoom-out");
+      musica.pause();
+      musica.currentTime = 0;
     });
+  });
+
+  // Cursor mágico en mundo ilógico
+  document.addEventListener("mousemove", e=>{
+    if(ilogico.style.display==="block"){
+      const destello=document.createElement("div");
+      destello.classList.add("destello");
+      destello.style.left=e.pageX+"px";
+      destello.style.top=e.pageY+"px";
+      document.body.appendChild(destello);
+      setTimeout(()=>destello.remove(),1000);
+    }
   });
 </script>
 </body>
 </html>
-
