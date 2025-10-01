@@ -3,12 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Portal Lógico / Ilógico</title>
+<title>Alicia: Mundo Lógico / Ilógico</title>
 <style>
-  /* Reset y estilos generales */
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
-    font-family: Arial, sans-serif;
+    font-family: 'Trebuchet MS', sans-serif;
     background:#f5f5f5;
     color:#222;
     overflow:hidden;
@@ -47,16 +46,17 @@
 
   /* Mundos */
   #mundo-logico { display:block; background:#f5f5f5; color:#222; }
-  #mundo-ilogico { display:none; background:radial-gradient(circle, #111, #000); color:#39ff14; position:relative; }
-  #mundo-ilogico button { background:#39ff14; color:black; }
+  #mundo-ilogico { display:none; background:radial-gradient(circle, #111, #000); color:#ffccff; position:relative; }
+  #mundo-ilogico button { background:#ffccff; color:black; }
 
-  /* Números flotantes */
-  .numero {
+  /* Objetos flotantes */
+  .flotante {
     position:absolute;
-    font-size:24px;
-    animation: flotar 8s linear infinite;
-    opacity:0.8;
+    font-size:26px;
     font-weight:bold;
+    animation: flotar 10s linear infinite;
+    opacity:0.8;
+    white-space:nowrap;
   }
   @keyframes flotar {
     from { transform: translateY(100vh) rotate(0deg); }
@@ -67,12 +67,11 @@
   .zoom-out { transform: scale(0) rotate(360deg); opacity:0; }
   .zoom-in { transform: scale(1); opacity:1; }
 
-  /* Portal violeta */
   .portal {
     position:fixed;
     top:0; left:0;
     width:100%; height:100%;
-    background: radial-gradient(circle, rgba(138,43,226,0.8) 0%, rgba(75,0,130,0.9) 80%);
+    background: radial-gradient(circle, rgba(148,0,211,0.8) 0%, rgba(75,0,130,0.9) 80%);
     z-index:9999;
     pointer-events:none;
     transform: scale(0);
@@ -92,31 +91,33 @@
 <section id="mundo-logico">
   <header><h1>Mundo Lógico</h1></header>
   <main id="logicoMain">
-    <p>Estás en el mundo lógico. Aquí todo sigue reglas claras, coherentes y racionales.</p>
+    <p>Estás en el mundo lógico, el mismo donde Alicia vivía antes de seguir al Conejo Blanco.  
+    Aquí todo tiene reglas claras, coherentes y racionales.</p>
     <ul>
       <li>✔ Matemáticas y física</li>
       <li>✔ Programación y lógica</li>
       <li>✔ Pensamiento estructurado</li>
     </ul>
-    <button id="cambiarMundo">Cambiar de Mundo</button>
+    <button id="cambiarMundo">Seguir al Conejo Blanco 🐇</button>
   </main>
-  <footer><p>Portal de Mundos © 2025</p></footer>
+  <footer><p>Alicia y los Mundos © 2025</p></footer>
 </section>
 
 <!-- Mundo Ilógico -->
 <section id="mundo-ilogico">
-  <header><h1>Mundo Ilógico</h1></header>
+  <header><h1>País de las Maravillas</h1></header>
   <main id="ilogicoMain">
-    <p>Estás en el mundo ilógico. Aquí todo puede cambiar en cualquier momento.</p>
+    <p>Has caído por la madriguera... ¡Bienvenido al mundo ilógico!  
+    Aquí nada es lo que parece y todo puede cambiar en un instante.</p>
     <ul>
-      <li>🎨 Arte abstracto y surrealismo</li>
-      <li>💭 Imaginación sin reglas</li>
-      <li>🌀 Contradicciones y paradojas</li>
-      <li>🌪️ Movimiento constante</li>
+      <li>🃏 Cartas que caminan</li>
+      <li>🐱 El Gato de Cheshire sonríe en la oscuridad</li>
+      <li>⏰ Relojes que laten sin tiempo</li>
+      <li>🍄 Mensajes como “¡Cómeme!” y “¡Bébeme!”</li>
     </ul>
-    <button id="volverMundo">Volver al Mundo Lógico</button>
+    <button id="volverMundo">Despertar del Sueño 🌙</button>
   </main>
-  <footer><p>Portal de Mundos © 2025</p></footer>
+  <footer><p>Alicia y los Mundos © 2025</p></footer>
 </section>
 
 <!-- Portal violeta -->
@@ -132,20 +133,21 @@
   const portal = document.getElementById("portal");
 
   function colorAleatorio() {
-    const colores = ["#39ff14","#ff00ff","#00ffff","#ff4500","#ffff00","#00ff90"];
+    const colores = ["#ffccff","#39ff14","#ff00ff","#00ffff","#ff4500","#ffff00"];
     return colores[Math.floor(Math.random()*colores.length)];
   }
 
-  function crearNumeros() {
-    ilogico.querySelectorAll(".numero").forEach(n=>n.remove());
+  function crearObjetos() {
+    ilogico.querySelectorAll(".flotante").forEach(n=>n.remove());
+    const simbolos = ["🃏","⏰","🐱","🍄","¡Cómeme!","¡Bébeme!","?", "∞"];
     for(let i=0;i<25;i++){
-      const num=document.createElement("div");
-      num.classList.add("numero");
-      num.style.left=Math.random()*100+"vw";
-      num.style.animationDuration=(5+Math.random()*10)+"s";
-      num.style.color=colorAleatorio();
-      num.textContent=Math.floor(Math.random()*100);
-      ilogico.appendChild(num);
+      const obj=document.createElement("div");
+      obj.classList.add("flotante");
+      obj.style.left=Math.random()*100+"vw";
+      obj.style.animationDuration=(5+Math.random()*10)+"s";
+      obj.style.color=colorAleatorio();
+      obj.textContent=simbolos[Math.floor(Math.random()*simbolos.length)];
+      ilogico.appendChild(obj);
     }
   }
 
@@ -165,7 +167,7 @@
       logico.style.display="none";
       ilogico.style.display="block";
       ilogicoMain.classList.add("zoom-in");
-      crearNumeros();
+      crearObjetos();
       logicoMain.classList.remove("zoom-out");
       cambiarBtn.classList.remove("temblar");
     });
@@ -178,7 +180,7 @@
       ilogico.style.display="none";
       logico.style.display="block";
       logicoMain.classList.add("zoom-in");
-      ilogico.querySelectorAll(".numero").forEach(n=>n.remove());
+      ilogico.querySelectorAll(".flotante").forEach(n=>n.remove());
       ilogicoMain.classList.remove("zoom-out");
     });
   });
