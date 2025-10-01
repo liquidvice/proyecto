@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Portal Lógico / Ilógico</title>
 <style>
+  /* Reset y estilos generales */
   * { margin:0; padding:0; box-sizing:border-box; }
   body {
     font-family: Arial, sans-serif;
@@ -46,38 +47,20 @@
 
   /* Mundos */
   #mundo-logico { display:block; background:#f5f5f5; color:#222; }
-  #mundo-ilogico {
-    display:none; 
-    background:radial-gradient(circle, #111, #000); 
-    color:#39ff14; 
-    position:relative; 
-    overflow:hidden;
-  }
+  #mundo-ilogico { display:none; background:radial-gradient(circle, #111, #000); color:#39ff14; position:relative; }
   #mundo-ilogico button { background:#39ff14; color:black; }
 
   /* Números flotantes */
   .numero {
     position:absolute;
     font-size:24px;
-    font-weight:bold;
     animation: flotar 8s linear infinite;
     opacity:0.8;
+    font-weight:bold;
   }
   @keyframes flotar {
     from { transform: translateY(100vh) rotate(0deg); }
     to { transform: translateY(-20vh) rotate(360deg); }
-  }
-
-  /* Texto que tiembla */
-  .temblando {
-    display:inline-block;
-    animation: texto-temblor 0.5s infinite;
-  }
-  @keyframes texto-temblor {
-    0%,100% { transform: translate(0,0); }
-    25% { transform: translate(-2px,2px); }
-    50% { transform: translate(2px,-2px); }
-    75% { transform: translate(-2px,-2px); }
   }
 
   /* Efectos portal */
@@ -107,8 +90,8 @@
 
 <!-- Mundo Lógico -->
 <section id="mundo-logico">
-  <header><h1 class="temblando">Mundo Lógico</h1></header>
-  <main id="logicoMain" class="temblando">
+  <header><h1>Mundo Lógico</h1></header>
+  <main id="logicoMain">
     <p>Estás en el mundo lógico. Aquí todo sigue reglas claras, coherentes y racionales.</p>
     <ul>
       <li>✔ Matemáticas y física</li>
@@ -117,15 +100,15 @@
     </ul>
     <button id="cambiarMundo">Cambiar de Mundo</button>
   </main>
-  <footer class="temblando"><p>Portal de Mundos © 2025</p></footer>
+  <footer><p>Portal de Mundos © 2025</p></footer>
 </section>
 
 <!-- Mundo Ilógico -->
 <section id="mundo-ilogico">
-  <header><h1 class="temblando">Mundo Ilógico</h1></header>
+  <header><h1>Mundo Ilógico</h1></header>
   <main id="ilogicoMain">
-    <p class="temblando">Estás en el mundo ilógico. Aquí todo puede cambiar en cualquier momento.</p>
-    <ul class="temblando">
+    <p>Estás en el mundo ilógico. Aquí todo puede cambiar en cualquier momento.</p>
+    <ul>
       <li>🎨 Arte abstracto y surrealismo</li>
       <li>💭 Imaginación sin reglas</li>
       <li>🌀 Contradicciones y paradojas</li>
@@ -133,78 +116,73 @@
     </ul>
     <button id="volverMundo">Volver al Mundo Lógico</button>
   </main>
-  <footer class="temblando"><p>Portal de Mundos © 2025</p></footer>
+  <footer><p>Portal de Mundos © 2025</p></footer>
 </section>
 
 <!-- Portal violeta -->
 <div id="portal" class="portal"></div>
 
 <script>
-const logico = document.getElementById("mundo-logico");
-const ilogico = document.getElementById("mundo-ilogico");
-const logicoMain = document.getElementById("logicoMain");
-const ilogicoMain = document.getElementById("ilogicoMain");
-const cambiarBtn = document.getElementById("cambiarMundo");
-const volverBtn = document.getElementById("volverMundo");
-const portal = document.getElementById("portal");
+  const logico = document.getElementById("mundo-logico");
+  const ilogico = document.getElementById("mundo-ilogico");
+  const logicoMain = document.getElementById("logicoMain");
+  const ilogicoMain = document.getElementById("ilogicoMain");
+  const cambiarBtn = document.getElementById("cambiarMundo");
+  const volverBtn = document.getElementById("volverMundo");
+  const portal = document.getElementById("portal");
 
-// Color aleatorio
-function colorAleatorio() {
-  const colores = ["#39ff14","#ff00ff","#00ffff","#ff4500","#ffff00","#00ff90"];
-  return colores[Math.floor(Math.random()*colores.length)];
-}
-
-// Crear números flotantes de fondo en el mundo ilógico
-function crearNumeros() {
-  ilogico.querySelectorAll(".numero").forEach(n=>n.remove());
-  for(let i=0;i<40;i++){
-    const num = document.createElement("div");
-    num.classList.add("numero");
-    num.style.left = Math.random()*100 + "vw";
-    num.style.top = Math.random()*100 + "vh";
-    num.style.animationDuration = (5+Math.random()*10) + "s";
-    num.style.fontSize = (12+Math.random()*24) + "px";
-    num.style.color = colorAleatorio();
-    num.textContent = Math.floor(Math.random()*100);
-    ilogico.appendChild(num);
+  function colorAleatorio() {
+    const colores = ["#39ff14","#ff00ff","#00ffff","#ff4500","#ffff00","#00ff90"];
+    return colores[Math.floor(Math.random()*colores.length)];
   }
-}
 
-// Activar portal
-function activarPortal(callback) {
-  portal.classList.add("activa");
-  setTimeout(()=>{
-    portal.classList.remove("activa");
-    callback();
-  },800);
-}
-
-// Cambiar al mundo ilógico
-cambiarBtn.addEventListener("click", function(){
-  logicoMain.classList.add("zoom-out");
-  cambiarBtn.classList.add("temblar");
-  activarPortal(()=>{
-    logico.style.display="none";
-    ilogico.style.display="block";
-    ilogicoMain.classList.add("zoom-in");
-    crearNumeros();
-    logicoMain.classList.remove("zoom-out");
-    cambiarBtn.classList.remove("temblar");
-  });
-});
-
-// Volver al mundo lógico
-volverBtn.addEventListener("click", function(){
-  ilogicoMain.classList.add("zoom-out");
-  activarPortal(()=>{
-    ilogico.style.display="none";
-    logico.style.display="block";
-    logicoMain.classList.add("zoom-in");
+  function crearNumeros() {
     ilogico.querySelectorAll(".numero").forEach(n=>n.remove());
-    ilogicoMain.classList.remove("zoom-out");
-  });
-});
-</script>
+    for(let i=0;i<25;i++){
+      const num=document.createElement("div");
+      num.classList.add("numero");
+      num.style.left=Math.random()*100+"vw";
+      num.style.animationDuration=(5+Math.random()*10)+"s";
+      num.style.color=colorAleatorio();
+      num.textContent=Math.floor(Math.random()*100);
+      ilogico.appendChild(num);
+    }
+  }
 
+  function activarPortal(callback) {
+    portal.classList.add("activa");
+    setTimeout(()=>{
+      portal.classList.remove("activa");
+      callback();
+    },800);
+  }
+
+  // Cambiar al mundo ilógico
+  cambiarBtn.addEventListener("click", function(){
+    logicoMain.classList.add("zoom-out");
+    cambiarBtn.classList.add("temblar");
+    activarPortal(()=>{
+      logico.style.display="none";
+      ilogico.style.display="block";
+      ilogicoMain.classList.add("zoom-in");
+      crearNumeros();
+      logicoMain.classList.remove("zoom-out");
+      cambiarBtn.classList.remove("temblar");
+    });
+  });
+
+  // Volver al mundo lógico
+  volverBtn.addEventListener("click", function(){
+    ilogicoMain.classList.add("zoom-out");
+    activarPortal(()=>{
+      ilogico.style.display="none";
+      logico.style.display="block";
+      logicoMain.classList.add("zoom-in");
+      ilogico.querySelectorAll(".numero").forEach(n=>n.remove());
+      ilogicoMain.classList.remove("zoom-out");
+    });
+  });
+</script>
 </body>
 </html>
+
