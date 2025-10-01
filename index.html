@@ -109,6 +109,16 @@
   @keyframes desvanecer {
     to { transform: scale(2); opacity: 0; }
   }
+
+  /* Estilo del nuevo botón "Juega ya" */
+  #juegaYa {
+    background:#00bfff;
+    color:white;
+    margin-top:15px;
+  }
+  #juegaYa:hover {
+    transform: scale(1.05);
+  }
 </style>
 </head>
 <body>
@@ -143,6 +153,8 @@
     </ul>
     <p id="frase"></p>
     <button id="volverMundo">Despertar del Sueño 🌙</button>
+    <!-- Nuevo botón "Juega ya" -->
+    <button id="juegaYa">Juega ya</button>
   </main>
   <footer><p>Alicia y los Mundos © 2025</p></footer>
 </section>
@@ -235,6 +247,12 @@
     });
   });
 
+  // Botón "Juega ya" que redirige al laberinto
+  const juegaYaBtn = document.getElementById("juegaYa");
+  juegaYaBtn.addEventListener("click", ()=>{
+    window.location.href = "https://liquidvice.github.io/laberinto2/";
+  });
+
   // Cursor mágico en mundo ilógico
   document.addEventListener("mousemove", e=>{
     if(ilogico.style.display==="block"){
@@ -249,3 +267,4 @@
 </script>
 </body>
 </html>
+
